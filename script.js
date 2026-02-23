@@ -1,3 +1,46 @@
+// Theme toggle (light/dark mode)
+(function() {
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+        } else {
+            html.removeAttribute('data-theme');
+        }
+        try {
+            localStorage.setItem('theme', theme);
+        } catch (e) {}
+    }
+
+    function initTheme() {
+        let saved;
+        try {
+            saved = localStorage.getItem('theme');
+        } catch (e) {}
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || saved === 'light') {
+            setTheme(saved);
+        } else if (prefersDark) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+    }
+
+    initTheme();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                setTheme(isDark ? 'light' : 'dark');
+            });
+        }
+    });
+})();
+
 // Mobile navigation toggle
 const navToggle = document.querySelector('.nav-toggle');
 const nav = document.querySelector('.nav');
